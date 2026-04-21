@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Good Luck bbgirl 🩺</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+```
+:root {
+  --beige:      #f5efe6;
+  --beige-dark: #ede0cf;
+  --brown-lt:   #c8a882;
+  --brown-mid:  #a07850;
+  --brown-dk:   #6b4c2a;
+  --cream:      #faf6f0;
+  --text:       #3d2b1a;
+}
+
+html, body {
+  height: 100%;
+  background: var(--beige);
+  color: var(--text);
+  font-family: 'Lato', sans-serif;
+  overflow-x: hidden;
+  user-select: none;
+}
+
+/* grain */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 999;
+}
+
+/* ambient blobs */
+.ambient { position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.22; pointer-events: none; animation: drift 18s ease-in-out infinite alternate; }
+.ambient.a1 { width: 420px; height: 420px; background: var(--brown-lt); top: -120px; left: -100px; animation-duration: 20s; }
+.ambient.a2 { width: 300px; height: 300px; background: var(--brown-mid); bottom: -80px; right: -60px; animation-duration: 15s; animation-delay: -7s; }
+.ambient.a3 { width: 180px; height: 180px; background: #e8cfa8; top: 40%; left: 62%; animation-duration: 25s; animation-delay: -3s; }
+@keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(28px,18px) scale(1.07); } }
+
+#confetti-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 998; }
+
+.page {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 40px 20px;
+  position: relative; z-index: 1;
+}
+
+.screen { display: none; width: 100%; max-width: 480px; text-align: center; }
+.screen.active { display: flex; flex-direction: column; align-items: center; }
+
+/* ── SCREEN 1 ── */
+#screen-charge .headline {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  font-weight: 700;
+  color: var(--brown-dk);
+  line-height: 1.3;
+  margin-bottom: 8px;
+}
+#screen-charge .sub {
+  font-size: 0.88rem;
+  font-weight: 300;
+  color: #9a7455;
+  letter-spacing: 0.06em;
+  margin-bottom: 32px;
+}
+
+.meter-row { width: 100%; margin-bottom: 8px; }
+.meter-label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: #b08458; margin-bottom: 8px; }
+.meter-track { width: 100%; height: 10px; background: var(--beige-dark); border-radius: 10px; overflow: hidden; border: 1px solid rgba(200,168,130,0.4); }
+.meter-fill  { height: 100%; width: 0%; background: linear-gradient(90deg, var(--brown-lt), var(--brown-mid)); border-radius: 10px; transition: width 0.12s ease; }
+.meter-pct   { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--brown-mid); margin-top: 6px; margin-bottom: 28px; }
+
+/* ── ORB ── */
+.orb-wrap {
+  position: relative;
+  width: 160px; height: 160px;
+  margin-bottom: 24px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+}
+.orb-ring {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--brown-lt);
+  animation: spin-ring 6s linear infinite;
+  opacity: 0.5;
+}
+.orb-ring.r2 { inset: 8px; border-color: rgba(200,168,130,0.3); animation-duration: 9s; animation-direction: reverse; }
+@keyframes spin-ring { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.orb {
+  position: absolute; inset: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #e8d0a8, var(--brown-lt) 55%, var(--brown-mid));
+  box-shadow: 0 0 0 0 rgba(200,168,130,0.5), 0 8px 32px rgba(160,120,80,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.8rem;
+  transition: transform 0.08s ease;
+}
+.orb.tapped  { transform: scale(0.88); }
+.orb.charged { animation: orb-glow 1.2s ease-in-out infinite alternate; }
+@keyframes orb-glow {
+  from { box-shadow: 0 0 12px 4px rgba(200,168,130,0.5),  0 8px 32px rgba(160,120,80,0.3); }
+  to   { box-shadow: 0 0 32px 14px rgba(200,168,130,0.7), 0 8px 40px rgba(160,120,80,0.5); }
+}
+
+.ripple {
+  position: absolute; border-radius: 50%;
+  background: rgba(200,168,130,0.32);
+  pointer-events: none;
+  animation: ripple-out 0.5s ease-out forwards;
+}
+@keyframes ripple-out { from { transform: scale(0); opacity: 1; } to { transform: scale(2.8); opacity: 0; } }
+
+.tap-hint {
+  font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--brown-lt); margin-bottom: 0;
+  animation: blink 2.2s ease-in-out infinite;
+}
+@keyframes blink { 0%,100% { opacity: 0.45; } 50% { opacity: 1; } }
+
+.claim-btn {
+  margin-top: 26px;
+  background: linear-gradient(135deg, var(--brown-lt), var(--brown-mid));
+  color: #fff;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.95rem; font-weight: 400;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  border: none; border-radius: 50px;
+  padding: 15px 42px; cursor: pointer;
+  box-shadow: 0 4px 20px rgba(160,120,80,0.35);
+  opacity: 0; transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease, box-shadow 0.18s ease;
+}
+.claim-btn.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+.claim-btn:hover   { box-shadow: 0 8px 28px rgba(160,120,80,0.5); transform: translateY(-2px); }
+.claim-btn:active  { transform: scale(0.97); }
+
+/* ── SCREEN 2 ── */
+#screen-photo { animation: fade-up 0.7s cubic-bezier(0.34,1.2,0.64,1) forwards; }
+@keyframes fade-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+.photo-frame {
+  position: relative; width: 100%; max-width: 400px;
+  border-radius: 20px; overflow: hidden;
+  box-shadow: 0 12px 48px rgba(107,76,42,0.22), 0 2px 8px rgba(107,76,42,0.1);
+  border: 3px solid var(--brown-lt);
+}
+.photo-frame img {
+  width: 100%; display: block;
+  object-fit: cover; max-height: 480px;
+  min-height: 320px;
+  background: linear-gradient(135deg, #e8d0a8, #c8a882);
+}
+
+.photo-overlay {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 48px 24px 24px;
+  background: linear-gradient(to top, rgba(45,24,8,0.80) 0%, transparent 100%);
+  color: #fff;
+}
+.photo-overlay .big-msg {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.4rem, 5vw, 1.85rem);
+  font-style: italic; line-height: 1.25;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.55);
+}
+.photo-overlay .small-msg {
+  font-size: 0.85rem; font-weight: 300;
+  letter-spacing: 0.07em; margin-top: 6px; opacity: 0.88;
+}
+
+.luck-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 22px;
+  background: linear-gradient(135deg, var(--brown-lt), var(--brown-mid));
+  color: #fff; border-radius: 50px;
+  padding: 10px 28px;
+  font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase;
+  box-shadow: 0 4px 16px rgba(160,120,80,0.3);
+}
+
+@media (max-width: 400px) {
+  .orb-wrap { width: 130px; height: 130px; }
+}
+```
+
+  </style>
+</head>
+<body>
+
+<div class="ambient a1"></div>
+<div class="ambient a2"></div>
+<div class="ambient a3"></div>
+<canvas id="confetti-canvas"></canvas>
+
+<div class="page">
+
+  <!-- SCREEN 1: Tap to charge -->
+
+  <div class="screen active" id="screen-charge">
+    <p class="headline">Good luck for<br><em style="font-family:'Playfair Display',serif;color:var(--brown-mid)">Pediatrics</em>, bbgirl 🩺</p>
+    <p class="sub">Tap the orb fast to charge up your luck ✨</p>
+
+```
+<div class="meter-row">
+  <div class="meter-label">Luck level</div>
+  <div class="meter-track"><div class="meter-fill" id="meter-fill"></div></div>
+  <div class="meter-pct" id="meter-pct">0%</div>
+</div>
+
+<div class="orb-wrap" id="orb-wrap">
+  <div class="orb-ring"></div>
+  <div class="orb-ring r2"></div>
+  <div class="orb" id="orb">🍀</div>
+</div>
+
+<p class="tap-hint" id="tap-hint">tap tap tap!</p>
+
+<button class="claim-btn" id="claim-btn" onclick="claimLuck()">
+  Claim Good Luck 💛
+</button>
+```
+
+  </div>
+
+  <!-- SCREEN 2: Photo reveal -->
+
+  <div class="screen" id="screen-photo">
+    <div class="photo-frame">
+      <!--
+        ══════════════════════════════════════════
+        ADD YOUR PHOTO:
+        1. Put your image file (e.g. photo.jpg) in
+           the same folder as this index.html
+        2. Change  src="photo.jpg"  to your filename
+        ══════════════════════════════════════════
+      -->
+      <img src="photo.jpg" alt=""
+        onerror="this.style.minHeight='360px';this.style.background='linear-gradient(135deg,#e8d0a8,#c8a882)';this.removeAttribute('onerror');" />
+      <div class="photo-overlay">
+        <div class="big-msg"> You've got this cutie ✨</div>
+        <div class="small-msg">Mr balls </div>
+      </div>
+    </div>
+    <div class="luck-badge">⭐ 100% Luck Claimed ⭐</div>
+  </div>
+
+</div>
+
+<script>
+  const TAPS_NEEDED = 30;
+  let taps = 0, charged = false;
+
+  const orbEl   = document.getElementById('orb');
+  const orbWrap = document.getElementById('orb-wrap');
+  const fillEl  = document.getElementById('meter-fill');
+  const pctEl   = document.getElementById('meter-pct');
+  const hintEl  = document.getElementById('tap-hint');
+  const btnEl   = document.getElementById('claim-btn');
+
+  function doTap() {
+    if (charged) return;
+    taps = Math.min(taps + 1, TAPS_NEEDED);
+    const pct = Math.round((taps / TAPS_NEEDED) * 100);
+
+    fillEl.style.width = pct + '%';
+    pctEl.textContent  = pct + '%';
+
+    // orb bounce
+    orbEl.classList.add('tapped');
+    setTimeout(() => orbEl.classList.remove('tapped'), 80);
+
+    // ripple effect
+    const rEl  = document.createElement('div');
+    rEl.className = 'ripple';
+    const size = orbWrap.offsetWidth;
+    rEl.style.cssText = `width:${size}px;height:${size}px;left:0;top:0;`;
+    orbWrap.appendChild(rEl);
+    setTimeout(() => rEl.remove(), 520);
+
+    // hints
+    if      (pct < 35)  hintEl.textContent = 'tap tap tap!';
+    else if (pct < 65)  hintEl.textContent = 'keep going! 🔥';
+    else if (pct < 100) hintEl.textContent = 'almost there...';
+    else {
+      hintEl.textContent = '✨ fully charged!';
+      orbEl.classList.add('charged');
+      btnEl.classList.add('visible');
+      charged = true;
+    }
+  }
+
+  orbWrap.addEventListener('click', doTap);
+  orbWrap.addEventListener('touchstart', (e) => { e.preventDefault(); doTap(); }, { passive: false });
+
+  function claimLuck() {
+    launchConfetti();
+    setTimeout(() => {
+      document.getElementById('screen-charge').classList.remove('active');
+      document.getElementById('screen-photo').classList.add('active');
+    }, 320);
+  }
+
+  // ── Confetti ──
+  function launchConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx    = canvas.getContext('2d');
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const COLORS  = ['#c8a882','#a07850','#e8d0a8','#6b4c2a','#f0e0c0','#d4a870','#fffaf3','#b8905a'];
+    const pieces  = Array.from({length: 190}, () => ({
+      x: Math.random() * canvas.width,
+      y: -20 - Math.random() * 200,
+      vx: (Math.random() - 0.5) * 3.5,
+      vy: 2 + Math.random() * 4,
+      ang: Math.random() * Math.PI * 2,
+      spin: (Math.random() - 0.5) * 0.18,
+      col: COLORS[Math.floor(Math.random() * COLORS.length)],
+      shape: Math.random() > 0.45 ? 'rect' : 'circle',
+      w: 5 + Math.random() * 9, h: 3 + Math.random() * 7,
+      r: 3 + Math.random() * 4,
+    }));
+    let frame = 0;
+    (function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (const p of pieces) {
+        ctx.save();
+        ctx.translate(p.x, p.y); ctx.rotate(p.ang);
+        ctx.fillStyle = p.col;
+        ctx.globalAlpha = Math.max(0, 1 - frame / 210);
+        if (p.shape === 'rect') ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+        else { ctx.beginPath(); ctx.arc(0,0,p.r,0,Math.PI*2); ctx.fill(); }
+        ctx.restore();
+        p.x += p.vx; p.y += p.vy; p.ang += p.spin; p.vy += 0.09;
+      }
+      frame++;
+      if (frame < 250) requestAnimationFrame(draw);
+      else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    })();
+  }
+
+  window.addEventListener('resize', () => {
+    const c = document.getElementById('confetti-canvas');
+    c.width = window.innerWidth; c.height = window.innerHeight;
+  });
+</script>
+
+</body>
+</html>
